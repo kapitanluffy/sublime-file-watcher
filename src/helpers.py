@@ -57,9 +57,15 @@ def get_global_ignore_globs(root_path: str) -> List[str]:
 def register_watcher(window: sublime.Window):
     _watcher = get_watcher()
     if _watcher is None:
+        print("is LSP-file-watcher-chokidar installed?")
         return
 
     _chokidar = get_chokidar()
+
+    if _chokidar is None:
+        print("is LSP-file-watcher-chokidar installed?")
+        return
+
     controller_id = _chokidar._last_controller_id
 
     wid = window.id()
