@@ -13,11 +13,22 @@ Create an event listener in your package
 
 ```py
 import sublime
-from FileWatcher.src.file_event_listener import FileEventListener
+import sublime_plugin
 
-class MyFileEventListener(FileEventListener):
+class MyFileEventListener(sublime_plugin.EventListener):
     def on_window_command(self, window: sublime.Window, command_name: str, args):
-        super().on_window_command(window, command_name, args)
+        if command_name != "file_watcher_broadcast_event":
+            return
+
+        event = args['_event']
+        file = args['file']
+
+        if event == "create":
+            self.on_create(file, window)
+        if event == "change":
+            self.on_change(file, window)
+        if event == "delete":
+            self.on_delete(file, window)
 
     def on_create(self, file, window):
         # do something when a file is created
