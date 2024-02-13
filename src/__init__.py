@@ -1,7 +1,3 @@
-from ..plugin import reload
-
-reload("src", ["helpers", "file_watcher_handler", "file_event_listener", "core"])
-
 from .helpers import *
 from .file_watcher_handler import *
 from .file_event_listener import *

@@ -1,7 +1,6 @@
 from typing import Optional, cast, List
 import sublime
 import posixpath
-
 from .__globals import FILE_WATCHER_WINDOWS, FILE_WATCHER_HANDLERS
 from .file_watcher_handler import FileWatcherHandler, get_chokidar, get_watcher
 
