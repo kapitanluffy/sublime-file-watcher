@@ -1,6 +1,5 @@
 import sublime
 import sublime_plugin
-from .__globals import GLOBAL_FILE_WATCHERS, GLOBAL_FILE_WATCHER_HANDLERS
 
 
 class FileEventListener(sublime_plugin.EventListener):
@@ -8,27 +7,25 @@ class FileEventListener(sublime_plugin.EventListener):
         if command_name != "file_watcher_broadcast_event":
             return
 
-        print('>>', GLOBAL_FILE_WATCHER_HANDLERS)
-
         event = args['_event']
         file = args['file']
 
         if event == "create":
-            self.on_create(file)
+            self.on_create(file, window)
 
         if event == "change":
-            self.on_change(file)
+            self.on_change(file, window)
 
         if event == "delete":
-            self.on_delete(file)
+            self.on_delete(file, window)
 
         pass
 
-    def on_create(self, file):
+    def on_create(self, file, window):
         pass
 
-    def on_change(self, file):
+    def on_change(self, file, window):
         pass
 
-    def on_delete(self, file):
+    def on_delete(self, file, window):
         pass

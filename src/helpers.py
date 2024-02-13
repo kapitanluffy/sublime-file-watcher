@@ -1,10 +1,10 @@
-from typing import Optional, cast, List, Union
+from typing import Optional, cast, List
 import sublime
 import posixpath
-import random
 
-from .__globals import GLOBAL_FILE_WATCHERS, GLOBAL_FILE_WATCHER_HANDLERS
+from .__globals import FILE_WATCHER_WINDOWS, FILE_WATCHER_HANDLERS
 from .file_watcher_handler import FileWatcherHandler, get_chokidar, get_watcher
+
 
 def sublime_pattern_to_glob(pattern: str, is_directory_pattern: bool, root_path: Optional[str] = None) -> str:
     """
@@ -38,6 +38,7 @@ def sublime_pattern_to_glob(pattern: str, is_directory_pattern: bool, root_path:
             glob += '/**'
     return glob
 
+
 def get_global_ignore_globs(root_path: str) -> List[str]:
     global_settings = sublime.load_settings("Preferences.sublime-settings")
 
@@ -53,6 +54,7 @@ def get_global_ignore_globs(root_path: str) -> List[str]:
     ]
     return folder_excludes + file_excludes + ['**/node_modules/**']
 
+
 def register_watcher(window: sublime.Window):
     _watcher = get_watcher()
     if _watcher is None:
@@ -64,46 +66,54 @@ def register_watcher(window: sublime.Window):
     wid = window.id()
     # print("Register {}".format(wid))
     folders = window.folders()
-    file_watchers = []
-
+    file_watchers = {}
 
     for index, folder in enumerate(folders):
         controller_id = controller_id + 1
-        fid = '{}.{}'.format(wid, index)
-        GLOBAL_FILE_WATCHER_HANDLERS[fid] = FileWatcherHandler(wid)
-        print('Register {} {} {}'.format(controller_id, wid, fid))
+        FILE_WATCHER_HANDLERS[controller_id] = FileWatcherHandler(wid)
+        # print('Register {} {} {}'.format(controller_id, wid, fid))
         ignores = get_global_ignore_globs(folder)
-        watcher = _watcher.create(folder, [''], ignores, ['create', 'change', 'delete'], GLOBAL_FILE_WATCHER_HANDLERS[fid])
-        file_watchers.append(watcher)
+        watcher = _watcher.create(
+            folder, [''], ignores, ['create', 'change', 'delete'], FILE_WATCHER_HANDLERS[controller_id])
+        file_watchers[controller_id] = watcher
 
-    if len(file_watchers) > 0:
-        GLOBAL_FILE_WATCHERS[wid] = file_watchers
+    if len(file_watchers.keys()) > 0:
+        FILE_WATCHER_WINDOWS[wid] = file_watchers
     pass
+
 
 def remove_watcher(window: sublime.Window):
     wid = window.id()
     # print("Unregister {}".format(wid))
-    file_watchers = GLOBAL_FILE_WATCHERS.pop(wid, None)
+    file_watchers = FILE_WATCHER_WINDOWS.pop(wid, None)
 
-    GLOBAL_FILE_WATCHER_HANDLERS.pop(wid, None)
+    FILE_WATCHER_HANDLERS.pop(wid, None)
 
     if file_watchers:
         for file_watcher in file_watchers:
-            file_watcher.destroy()
+            try:
+                file_watcher.destroy()
+            except Exception as e:
+                print("ERROR: {}".format(e))
         pass
+
 
 def register_all_watchers():
     windows = sublime.windows()
     for window in windows:
         register_watcher(window)
 
-def clear_all_watchers():
-    for wid, file_watchers in GLOBAL_FILE_WATCHERS.items():
-        if file_watchers:
-            for index,file_watcher in enumerate(file_watchers):
-                print("Unregister {}.{}".format(wid, index))
-                sublime.set_timeout_async(lambda: file_watcher.destroy(), 3000)
 
-    GLOBAL_FILE_WATCHERS.clear()
-    GLOBAL_FILE_WATCHER_HANDLERS.clear()
+def clear_all_watchers():
+    for wid, file_watchers in FILE_WATCHER_WINDOWS.items():
+        if file_watchers:
+            for cid, file_watcher in file_watchers.items():
+                # print("Unregister {}".format(cid))
+                try:
+                    file_watcher.destroy()
+                except Exception as e:
+                    print("ERROR: {}".format(e))
+
+    FILE_WATCHER_WINDOWS.clear()
+    FILE_WATCHER_HANDLERS.clear()
     pass

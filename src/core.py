@@ -3,7 +3,6 @@ from .file_watcher_handler import get_chokidar
 import sublime
 import sublime_plugin
 
-from .__globals import GLOBAL_FILE_WATCHERS, GLOBAL_FILE_WATCHER_HANDLERS
 
 class FileWatcherEventListener(sublime_plugin.EventListener):
     def on_init(self, views):
@@ -13,27 +12,22 @@ class FileWatcherEventListener(sublime_plugin.EventListener):
         pass
 
     def on_load_project_async(self, window: sublime.Window):
-        # print("on_load_project_async")
         register_watcher(window)
         pass
 
     def on_new_window_async(self, window: sublime.Window):
-        # print("on_new_window_async")
         register_watcher(window)
         pass
 
     def on_pre_close_project(self, window: sublime.Window):
-        # print("on_pre_close_project")
         remove_watcher(window)
         pass
 
     def on_pre_close_window(self, window: sublime.Window):
-        # print("on_pre_close_window")
         remove_watcher(window)
         pass
 
     def on_pre_save_project(self, window: sublime.Window):
-        # print("on_pre_save_project")
         # @todo handle new folder added
         pass
 

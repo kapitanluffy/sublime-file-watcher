@@ -13,19 +13,23 @@ try:
 except Exception as e:
     print(str(e))
 
+
 def get_chokidar():
     if Watcher:
         return Watcher.file_watcher
     return None
+
 
 def get_watcher():
     if Watcher:
         return Watcher.FileWatcherController
     return None
 
+
 class FileWatcherBroadcastEventCommand(sublime_plugin.WindowCommand):
     def run(self, **kwargs):
         pass
+
 
 class FileWatcherHandler():
     def __init__(self, wid: int):
@@ -45,5 +49,5 @@ class FileWatcherHandler():
             return
 
         for event in events:
-            window.run_command("file_watcher_broadcast_event", { "_event": event[0], "file": event[1] })
+            window.run_command("file_watcher_broadcast_event", {"_event": event[0], "file": event[1]})
         pass
