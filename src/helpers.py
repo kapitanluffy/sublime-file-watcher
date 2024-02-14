@@ -1,11 +1,10 @@
-from typing import Optional, cast, List
 import sublime
 import posixpath
 from .__globals import FILE_WATCHER_WINDOWS, FILE_WATCHER_HANDLERS
 from .file_watcher_handler import FileWatcherHandler, get_chokidar, get_watcher
 
 
-def sublime_pattern_to_glob(pattern: str, is_directory_pattern: bool, root_path: Optional[str] = None) -> str:
+def sublime_pattern_to_glob(pattern, is_directory_pattern, root_path=None):
     """
     Convert a Sublime Text pattern (http://www.sublimetext.com/docs/file_patterns.html)
     to a glob pattern that utilizes globstar extension.
@@ -38,15 +37,15 @@ def sublime_pattern_to_glob(pattern: str, is_directory_pattern: bool, root_path:
     return glob
 
 
-def get_global_ignore_globs(root_path: str) -> List[str]:
+def get_global_ignore_globs(root_path):
     global_settings = sublime.load_settings("Preferences.sublime-settings")
 
-    folder_exclude_patterns = cast(List[str], global_settings.get('folder_exclude_patterns'))
+    folder_exclude_patterns = global_settings.get('folder_exclude_patterns', [])
     folder_excludes = [
         sublime_pattern_to_glob(pattern, is_directory_pattern=True, root_path=root_path)
         for pattern in folder_exclude_patterns
     ]
-    file_exclude_patterns = cast(List[str], global_settings.get('file_exclude_patterns'))
+    file_exclude_patterns = global_settings.get('file_exclude_patterns', [])
     file_excludes = [
         sublime_pattern_to_glob(pattern, is_directory_pattern=False, root_path=root_path)
         for pattern in file_exclude_patterns
