@@ -84,7 +84,6 @@ def register_watcher(window: sublime.Window):
 
     if len(file_watchers.keys()) > 0:
         FILE_WATCHER_WINDOWS[wid] = file_watchers
-    pass
 
 
 def remove_watcher(window: sublime.Window):
@@ -100,7 +99,6 @@ def remove_watcher(window: sublime.Window):
                 file_watcher.destroy()
             except Exception as e:
                 print("ERROR: {}".format(e))
-        pass
 
 
 def register_all_watchers():
@@ -121,4 +119,3 @@ def clear_all_watchers():
 
     FILE_WATCHER_WINDOWS.clear()
     FILE_WATCHER_HANDLERS.clear()
-    pass

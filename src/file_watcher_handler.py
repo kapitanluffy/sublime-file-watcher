@@ -48,4 +48,3 @@ class FileWatcherHandler():
 
         for event in events:
             window.run_command("file_watcher_broadcast_event", {"_event": event[0], "file": event[1]})
-        pass
