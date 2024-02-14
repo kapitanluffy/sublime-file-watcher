@@ -1,15 +1,15 @@
-# File Watcher
+# 👁 File Watcher
 
-Adds support to broadcasting file events to Sublime Text 
+Sublime Text unfortunately does not automatically detect changes in the loaded folders.
+This package adds support to it by leveraging `LSP` features and broadcasting an event where other packages can subscribe
 
-## Requires:
+## Requirements:
 
-This package requires [`LSP-file-watcher-chokidar`](https://packagecontrol.io/packages/LSP-file-watcher-chokidar). 
-It should be available already if you are using LSP packages
+This package requires [`LSP-file-watcher-chokidar`](https://packagecontrol.io/packages/LSP-file-watcher-chokidar)
 
 ## Usage:
 
-Create an event listener in your package
+Create an event listener inside your package subscribing to `file_watcher_broadcast_event`
 
 ```py
 import sublime
