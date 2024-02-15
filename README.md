@@ -5,7 +5,7 @@ This package adds support to it by leveraging `LSP` features and broadcasting an
 
 ## Requirements:
 
-This package requires [`LSP-file-watcher-chokidar`](https://packagecontrol.io/packages/LSP-file-watcher-chokidar)
+This package requires [LSP](https://packagecontrol.io/packages/LSP) and [`LSP-file-watcher-chokidar`](https://packagecontrol.io/packages/LSP-file-watcher-chokidar)
 
 ## Usage:
 
@@ -21,24 +21,24 @@ class MyFileEventListener(sublime_plugin.EventListener):
             return
 
         event = args['_event']
-        file = args['file']
+        files = args['files']
 
         if event == "create":
-            self.on_create(file, window)
+            self.on_create(files, window)
         if event == "change":
-            self.on_change(file, window)
+            self.on_change(files, window)
         if event == "delete":
-            self.on_delete(file, window)
+            self.on_delete(files, window)
 
-    def on_create(self, file, window):
-        # do something when a file is created
+    def on_create(self, files, window):
+        # do something when files are created
         pass
 
-    def on_change(self, file, window):
-        # do something when a file is changed
+    def on_change(self, files, window):
+        # do something when files are changed
         pass
 
-    def on_delete(self, file, window):
-        # do something when a file is deleted
+    def on_delete(self, files, window):
+        # do something when files are deleted
         pass
 ```
