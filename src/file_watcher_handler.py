@@ -46,5 +46,33 @@ class FileWatcherHandler():
         if window is None:
             return
 
-        for event in events:
-            window.run_command("file_watcher_broadcast_event", {"_event": event[0], "file": event[1]})
+        event_create = []
+        event_change = []
+        event_delete = []
+
+        for e in events:
+            event, file = e
+
+            if event == 'create':
+                event_create.append(file)
+                continue
+
+            if event == 'change':
+                event_change.append(file)
+                continue
+
+            if event == 'delete':
+                event_delete.append(file)
+                continue
+
+            # if there are unknown events, just broadcast them
+            window.run_command("file_watcher_broadcast_event", {"_event": event, "files": [file]})
+
+        if len(event_create) > 0:
+            window.run_command("file_watcher_broadcast_event", {"_event": 'create', "files": [event_create]})
+
+        if len(event_change) > 0:
+            window.run_command("file_watcher_broadcast_event", {"_event": 'change', "files": [event_change]})
+
+        if len(event_delete) > 0:
+            window.run_command("file_watcher_broadcast_event", {"_event": 'delete', "files": [event_delete]})
