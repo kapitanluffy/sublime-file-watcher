@@ -20,25 +20,9 @@ class MyFileEventListener(sublime_plugin.EventListener):
         if command_name != "file_watcher_broadcast_event":
             return
 
-        event = args['_event']
-        files = args['files']
+        # _events is an array of tuples `(event, file)[]`
+        # "event" can be create, change or delete
+        events = args['_events']
 
-        if event == "create":
-            self.on_create(files, window)
-        if event == "change":
-            self.on_change(files, window)
-        if event == "delete":
-            self.on_delete(files, window)
-
-    def on_create(self, files, window):
-        # do something when files are created
-        pass
-
-    def on_change(self, files, window):
-        # do something when files are changed
-        pass
-
-    def on_delete(self, files, window):
-        # do something when files are deleted
-        pass
+        # do something...
 ```
