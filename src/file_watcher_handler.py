@@ -32,7 +32,6 @@ class FileWatcherBroadcastEventCommand(sublime_plugin.WindowCommand):
 class FileWatcherHandler():
     def __init__(self, wid: int):
         self.wid = wid
-        pass
 
     def on_file_event_async(self, events) -> None:
         windows = sublime.windows()
